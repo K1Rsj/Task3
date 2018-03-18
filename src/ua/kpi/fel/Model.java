@@ -12,9 +12,26 @@ public class Model {
 
     private String fullName;
 
-    public void createNote() {
+    public void createNote() throws EmailNotUniqueException, NickNameNotUniqueException {
         Notebook notebook = new Notebook(nickName, phoneNumber, email, dateOfCreation, fullName);
+        checkingNotebookForUniqueness(notebook);
+
         notebook.printNote();
+    }
+
+    public void checkingNotebookForUniqueness(Notebook notebook) throws EmailNotUniqueException, NickNameNotUniqueException {
+        for (DB db : DB.values()) {
+            if (db.getEmail().equals(notebook.getEmail())) {
+                throw new EmailNotUniqueException();
+            }
+            else if (db.getNickName().equals(notebook.getNickName())) {
+                throw new NickNameNotUniqueException();
+            }
+        }
+    }
+
+    public void setFullName() {
+        fullName = name + " " + surname;
     }
 
     public void setName(String name) {
@@ -39,9 +56,6 @@ public class Model {
 
     public void setDateOfCreation(LocalDateTime dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
-    }
-    public void setFullName() {
-        fullName = name + " " + surname;
     }
 
 }

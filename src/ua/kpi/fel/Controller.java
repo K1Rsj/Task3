@@ -15,12 +15,13 @@ public class Controller {
     public void runProcess() {
         model.setName(checkInputDataWithRegex(View.INPUT_NAME, RegexConstants.name));
         model.setSurname(checkInputDataWithRegex(View.INPUT_SURNAME, RegexConstants.surname));
-        model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
+        //model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
         model.setPhoneNumber(checkInputDataWithRegex(View.INPUT_PHONE_NUMBER, RegexConstants.phoneNumber));
-        model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
+        //model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
         model.setDateOfCreation(LocalDateTime.now());
         model.setFullName();
-        model.createNote();
+        checkingUniqueData();
+        //model.createNote();
     }
 
     public String checkInputDataWithRegex(String message, String regex) {
@@ -31,6 +32,17 @@ public class Controller {
             wrongInputInstructions(message);
         }
         return result;
+    }
+
+    public void checkingUniqueData() {
+        model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
+        model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
+        try {
+            model.createNote();
+        } catch (EmailNotUniqueException | NickNameNotUniqueException e) {
+            e.printStackTrace();
+            checkingUniqueData();
+        }
     }
 
     private void wrongInputInstructions(String message) {

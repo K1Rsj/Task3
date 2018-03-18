@@ -20,4 +20,12 @@ public class Notebook {
     public void printNote() {
         System.out.println(fullName + " " + nickName + " " + phoneNumber + " " + email + " " + dateOfCreation);
     }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
