@@ -2,7 +2,7 @@ package ua.kpi.fel;
 
 public class EmailNotUniqueException extends Exception {
 
-    public EmailNotUniqueException() {
+    public EmailNotUniqueException(String message) {
+        super(message);
     }
-
 }

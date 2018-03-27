@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Controller {
-    private Model model;
+    private Notebook model;
     private View view;
 
-    public Controller(Model model, View view) {
+    public Controller(Notebook model, View view) {
         this.model = model;
         this.view = view;
     }
@@ -15,13 +15,27 @@ public class Controller {
     public void runProcess() {
         model.setName(checkInputDataWithRegex(View.INPUT_NAME, RegexConstants.name));
         model.setSurname(checkInputDataWithRegex(View.INPUT_SURNAME, RegexConstants.surname));
-        //model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
+        model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
         model.setPhoneNumber(checkInputDataWithRegex(View.INPUT_PHONE_NUMBER, RegexConstants.phoneNumber));
-        //model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
+        model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
         model.setDateOfCreation(LocalDateTime.now());
         model.setFullName();
-        checkingUniqueData();
-        //model.createNote();
+        HandlingNotUniqueExceptions();
+    }
+
+    public void HandlingNotUniqueExceptions() {
+        while (true) {
+            try {
+                model.createNote();
+                break;
+            } catch (EmailNotUniqueException e) {
+                System.out.println(e.getMessage());
+                model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
+            } catch (NickNameNotUniqueException e) {
+                System.out.println(e.getMessage());
+                model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
+            }
+        }
     }
 
     public String checkInputDataWithRegex(String message, String regex) {
@@ -34,16 +48,6 @@ public class Controller {
         return result;
     }
 
-    public void checkingUniqueData() {
-        model.setNickName(checkInputDataWithRegex(View.INPUT_NICK_NAME, RegexConstants.nickName));
-        model.setEmail(checkInputDataWithRegex(View.INPUT_EMAIL, RegexConstants.email));
-        try {
-            model.createNote();
-        } catch (EmailNotUniqueException | NickNameNotUniqueException e) {
-            e.printStackTrace();
-            checkingUniqueData();
-        }
-    }
 
     private void wrongInputInstructions(String message) {
         view.printMessage(View.WRONG_INPUT);
